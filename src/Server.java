@@ -11,7 +11,7 @@ public class Server {
         DatagramSocket sendingSocket = new DatagramSocket();
         DatagramPacket receivingPacket;
         DatagramPacket sendingPacket;
-        InetAddress IP = InetAddress.getByName("localhost");
+        InetAddress IP = InetAddress.getByName("10.111.180.33");
         byte[] sendData;
         byte[] receiveData = new byte[1024];
         String message;
