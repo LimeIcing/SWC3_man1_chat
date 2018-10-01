@@ -24,10 +24,5 @@ public class Client {
         heartbeat.start();
         receiverThread.start();
         senderThread.start();
-
-        //TODO: Test if this works. Try moving it into ClientSender
-        while (!senderThread.isAlive()) {
-            System.exit(0);
-        }
     }
 }

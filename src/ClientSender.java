@@ -22,18 +22,32 @@ public class ClientSender implements Runnable {
         byte[] sendData;
         String message;
         boolean shouldRun = true;
+        boolean commandIsBad;
 
         //TODO: Make sure '/quit' command is uppercase before sending and terminate afterwards
         System.out.println("The server is ready to receive your message!");
         while (shouldRun) {
+            commandIsBad = false;
             try {
                 message = input.readLine();
-                sendData = message.getBytes();
-                sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
-                sendingSocket.send(sendingPacket);
+                if (message.startsWith("/")) {
+                    if (message.equalsIgnoreCase("/quit")) {
+                        shouldRun = false;
+                    } else {
+                        commandIsBad = true;
+                        System.out.println("Unknown command \"" + message + "\"");
+                    }
+                }
+
+                if (!commandIsBad) {
+                    sendData = message.getBytes();
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
+                    sendingSocket.send(sendingPacket);
+                }
             } catch (IOException iOE) {
                 System.out.println("Failed to send the message.");
             }
         }
+        System.exit(0);
     }
 }
