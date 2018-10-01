@@ -16,7 +16,7 @@ public class Server {
         InetAddress IP = InetAddress.getByName("localhost");
         byte[] sendData;
         byte[] receiveData = new byte[1024];
-        String message;
+        String message, username = "";
         boolean userExists = false;
 
         System.out.println("Server ready");
@@ -24,24 +24,23 @@ public class Server {
             receivingPacket = new DatagramPacket(receiveData, receiveData.length);
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
-            System.out.println(message);
-            System.out.println(receivingPacket.getAddress());
-            System.out.println(receivingPacket.getPort());
             for (User user:users) {
                 if (user.getIP().equals(receivingPacket.getAddress())) {
                     userExists  = true;
+                    username = user.getUsername();
                 }
             }
             if (!userExists) {
                 users.add(new User(message, receivingPacket.getAddress(), clientPort));
-                message = "New user created: \"" + message + "\"";
-                System.out.println(message);
+                System.out.println("New user created: \"" + message + "\"");
+                message = "J_OK";
                 sendData = message.getBytes();
                 sendingPacket =
                         new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
                 sendingSocket.send(sendingPacket);
             } else {
-                System.out.println("Received message: " + message);
+                message = username + ": " + message;
+                System.out.println("Received message from " + message);
                 sendData = message.getBytes();
                 for (User user:users) {
                     sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);

@@ -25,6 +25,7 @@ public class ClientSender implements Runnable {
 
         while (shouldRun) {
             try {
+                System.out.print("Please type your message: ");
                 message = input.readLine();
                 sendData = message.getBytes();
                 sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
