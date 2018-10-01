@@ -20,9 +20,10 @@ public class Authenticator {
         DatagramPacket receivingPacket;
         byte[] sendData;
         byte[] receiveData = new byte[1024];
-        String serverMessage;
+        String join, serverMessage;
 
-        sendData = username.getBytes();
+        join = "/JOIN " + username;
+        sendData = join.getBytes();
         sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
         sendingSocket.send(sendingPacket);
         receivingPacket = new DatagramPacket(receiveData, receiveData.length);

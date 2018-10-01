@@ -13,6 +13,7 @@ public class Client {
         Authenticator authenticator = new Authenticator(receivingSocket, sendingSocket, serverIP, serverPort);
         Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
         Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort));
+        Thread heartbeat = new Thread(new Heartbeat(sendingSocket, serverIP, serverPort));
         boolean isAccepted = false;
 
         System.out.print("Welcome to superchat!\nPlease type your name: ");
@@ -20,7 +21,13 @@ public class Client {
             isAccepted = authenticator.authenticate(input.readLine());
         }
 
+        heartbeat.start();
         receiverThread.start();
         senderThread.start();
+
+        //TODO: Test if this works. Try moving it into ClientSender
+        while (!senderThread.isAlive()) {
+            System.exit(0);
+        }
     }
 }
