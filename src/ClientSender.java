@@ -6,12 +6,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class ClientSender implements Runnable {
-    DatagramSocket sendingSocket;
-    InetAddress IP;
+    private DatagramSocket sendingSocket;
+    private InetAddress serverIP;
+    private int serverPort;
 
-    public ClientSender(DatagramSocket sendingSocket, InetAddress IP) {
+    public ClientSender(DatagramSocket sendingSocket, InetAddress serverIP, int serverPort) {
         this.sendingSocket = sendingSocket;
-        this.IP = IP;
+        this.serverIP = serverIP;
+        this.serverPort = serverPort;
     }
 
     public void run() {
@@ -25,7 +27,7 @@ public class ClientSender implements Runnable {
             try {
                 message = input.readLine();
                 sendData = message.getBytes();
-                sendingPacket = new DatagramPacket(sendData, sendData.length, IP, 6950);
+                sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
                 sendingSocket.send(sendingPacket);
             } catch (IOException iOE) {
                 System.out.println("Failed to send the message.");

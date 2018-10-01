@@ -3,7 +3,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class ClientReceiver implements Runnable {
-    DatagramSocket receivingSocket;
+    private DatagramSocket receivingSocket;
 
     public ClientReceiver(DatagramSocket receivingSocket) {
         this.receivingSocket = receivingSocket;
