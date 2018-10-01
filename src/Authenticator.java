@@ -34,7 +34,7 @@ public class Authenticator {
             return false;
         }
         System.out.println("You joined the server as \"" + username + "\".");
-        System.out.println("You are chatting with " + serverMessage.substring(4) + " people!");
+        System.out.println("Online users: " + serverMessage.substring(4));
         return true;
     }
 }
