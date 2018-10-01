@@ -32,9 +32,10 @@ public class Server {
                 }
             }
             if (!userExists) {
+                int hej = 5;
                 users.add(new User(message, receivingPacket.getAddress(), clientPort));
                 System.out.println("New user created: \"" + message + "\"");
-                message = "J_OK";
+                message = "J_OK" + users.toString();
                 sendData = message.getBytes();
                 sendingPacket =
                         new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);

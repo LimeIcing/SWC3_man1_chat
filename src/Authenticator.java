@@ -29,11 +29,12 @@ public class Authenticator {
         receivingSocket.receive(receivingPacket);
         serverMessage = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
-        if (!serverMessage.equals("J_OK")) {
+        if (!serverMessage.startsWith("J_OK")) {
             System.out.println(serverMessage);
             return false;
         }
         System.out.println("You joined the server as \"" + username + "\".");
+        System.out.println("You are chatting with " + serverMessage.substring(4) + " people!");
         return true;
     }
 }

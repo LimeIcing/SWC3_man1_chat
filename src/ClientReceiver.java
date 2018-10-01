@@ -15,6 +15,8 @@ public class ClientReceiver implements Runnable {
         String message;
         boolean shouldRun = true;
 
+
+
         while (shouldRun) {
             try {
                 receivingPacket = new DatagramPacket(receiveData, receiveData.length);
