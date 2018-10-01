@@ -17,10 +17,11 @@ public class Server {
         byte[] sendData;
         byte[] receiveData = new byte[1024];
         String message, username = "";
-        boolean userExists = false;
+        boolean userExists;
 
         System.out.println("Server ready");
         while (true) {
+            userExists = false;
             receivingPacket = new DatagramPacket(receiveData, receiveData.length);
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
@@ -46,6 +47,7 @@ public class Server {
                     sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
                     sendingSocket.send(sendingPacket);
                 }
+                System.out.println("message sent");
             }
         }
     }
