@@ -15,7 +15,7 @@ public class Client {
         Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort));
         boolean isAccepted = false;
 
-        System.out.print("Welcome to superchat!\nPlease type your name:");
+        System.out.print("Welcome to superchat!\nPlease type your name: ");
         while (!isAccepted) {
             isAccepted = authenticator.authenticate(input.readLine());
         }

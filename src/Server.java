@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Server {
     public static void main(String[] args) throws Exception {
+        int clientPort = 6951;
         List<User> users = new ArrayList<>();
         List<Thread> threads = new ArrayList<>();
         DatagramSocket receivingSocket = new DatagramSocket(6950);
@@ -23,18 +24,27 @@ public class Server {
             receivingPacket = new DatagramPacket(receiveData, receiveData.length);
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
+            System.out.println(message);
+            System.out.println(receivingPacket.getAddress());
+            System.out.println(receivingPacket.getPort());
             for (User user:users) {
                 if (user.getIP().equals(receivingPacket.getAddress())) {
                     userExists  = true;
                 }
             }
             if (!userExists) {
-                users.add(new User(message, receivingPacket.getAddress(), receivingPacket.getPort()));
+                users.add(new User(message, receivingPacket.getAddress(), clientPort));
+                message = "New user created: \"" + message + "\"";
+                System.out.println(message);
+                sendData = message.getBytes();
+                sendingPacket =
+                        new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
+                sendingSocket.send(sendingPacket);
             } else {
                 System.out.println("Received message: " + message);
                 sendData = message.getBytes();
                 for (User user:users) {
-                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getReceivingPort());
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
                     sendingSocket.send(sendingPacket);
                 }
             }

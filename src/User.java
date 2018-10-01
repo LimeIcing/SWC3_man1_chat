@@ -11,6 +11,11 @@ public class User {
         this.receivingPort = receivingPort;
     }
 
+    @Override
+    public String toString() {
+        return this.username;
+    }
+
     public String getUsername() {
         return username;
     }
