@@ -19,7 +19,6 @@ public class Server {
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
-            //TODO: Handle duplicate users in JOIN
             //TODO: Handle IMAV action server-side
             if (message.startsWith("/")) {
                 if (message.startsWith("/JOIN ")) {
@@ -34,6 +33,7 @@ public class Server {
 
                     if (userExists) {
                         message = "J_ER USER_EXISTS";
+                        sendMessage(false);
                     }
 
                     else {
