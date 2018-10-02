@@ -24,7 +24,6 @@ public class ClientSender implements Runnable {
         boolean shouldRun = true;
         boolean commandIsBad;
 
-        //TODO: Make sure '/quit' command is uppercase before sending and terminate afterwards
         System.out.println("The server is ready to receive your message!");
         while (shouldRun) {
             commandIsBad = false;
@@ -33,6 +32,7 @@ public class ClientSender implements Runnable {
                 if (message.startsWith("/")) {
                     if (message.equalsIgnoreCase("/quit")) {
                         shouldRun = false;
+                        message = message.toUpperCase();
                     } else {
                         commandIsBad = true;
                         System.out.println("Unknown command \"" + message + "\"");

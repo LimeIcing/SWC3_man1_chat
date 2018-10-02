@@ -21,20 +21,35 @@ public class Server {
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
+            //TODO: Handle duplicate users in JOIN
             //TODO: Handle IMAV action server-side
             //TODO: Handle QUIT action server-side. Reply to client to terminate Sender
-            if (message.startsWith("/JOIN ")) {
-                message = message.substring(6);
-                users.add(new User(message, receivingPacket.getAddress(), clientPort));
-                System.out.println("New user created: \"" + message + "\"");
-                message = "J_OK" + users.toString();
-                sendData = message.getBytes();
-                sendingPacket =
-                        new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
-                sendingSocket.send(sendingPacket);
-            }
+            if (message.startsWith("/")) {
+                if (message.startsWith("/JOIN ")) {
+                    message = message.substring(6);
+                    users.add(new User(message, receivingPacket.getAddress(), clientPort));
+                    System.out.println("New user created: \"" + message + "\"");
+                    message = "J_OK" + users.toString();
+                    sendData = message.getBytes();
+                    sendingPacket =
+                            new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
+                    sendingSocket.send(sendingPacket);
+                }
 
-            else if (message.equals("/IMAV")) {
+                else if (message.equals("/IMAV")) {
+                }
+
+                else if (message.equals("/QUIT")) {
+                    for (User user:users) {
+                        if (user.getIP().equals(receivingPacket.getAddress())) {
+                            users.remove(user);
+                        }
+                    }
+                }
+
+                else {
+                    System.out.println("BAD COMMAND \"" + message + "\"");
+                }
             }
 
             else {
@@ -47,8 +62,10 @@ public class Server {
                 System.out.println("Received message from " + message);
                 sendData = message.getBytes();
                 for (User user:users) {
-                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
-                    sendingSocket.send(sendingPacket);
+                    if (!user.getUsername().equals(username)) {
+                        sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
+                        sendingSocket.send(sendingPacket);
+                    }
                 }
                 System.out.println("message sent");
             }
