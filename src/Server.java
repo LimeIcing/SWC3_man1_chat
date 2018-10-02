@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
+    private static int clientPort = 6951;
+    private static List<User> users = new ArrayList<>();
+    private static DatagramPacket receivingPacket;
+    private static String message, username = "";
+
     public static void main(String[] args) throws Exception {
-        int clientPort = 6951;
-        List<User> users = new ArrayList<>();
         DatagramSocket receivingSocket = new DatagramSocket(6950);
-        DatagramSocket sendingSocket = new DatagramSocket();
-        DatagramPacket receivingPacket;
-        DatagramPacket sendingPacket;
-        byte[] sendData;
         byte[] receiveData = new byte[1024];
-        String message, username = "";
 
         System.out.println("Server ready");
         while (true) {
@@ -23,17 +21,29 @@ public class Server {
 
             //TODO: Handle duplicate users in JOIN
             //TODO: Handle IMAV action server-side
-            //TODO: Handle QUIT action server-side. Reply to client to terminate Sender
             if (message.startsWith("/")) {
                 if (message.startsWith("/JOIN ")) {
-                    message = message.substring(6);
-                    users.add(new User(message, receivingPacket.getAddress(), clientPort));
-                    System.out.println("New user created: \"" + message + "\"");
-                    message = "J_OK" + users.toString();
-                    sendData = message.getBytes();
-                    sendingPacket =
-                            new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
-                    sendingSocket.send(sendingPacket);
+                    boolean userExists = false;
+                    username = message.substring(6);
+
+                    for (User user:users) {
+                        if (username.equals(user.getUsername())) {
+                            userExists = true;
+                        }
+                    }
+
+                    if (userExists) {
+                        message = "J_ER USER_EXISTS";
+                    }
+
+                    else {
+                        users.add(new User(username, receivingPacket.getAddress(), clientPort));
+                        System.out.println("New user joined: \"" + username + "\"");
+                        message = "J_OK" + users.toString();
+                        sendMessage(false);
+                        message = username + " has joined the server!";
+                        sendMessage(true);
+                    }
                 }
 
                 else if (message.equals("/IMAV")) {
@@ -42,33 +52,55 @@ public class Server {
                 else if (message.equals("/QUIT")) {
                     for (User user:users) {
                         if (user.getIP().equals(receivingPacket.getAddress())) {
+                            message = "User \"" + user + "\" has left the server!";
+                            System.out.println(message);
+                            sendMessage(true);
                             users.remove(user);
+                            break;
                         }
                     }
                 }
 
                 else {
-                    System.out.println("BAD COMMAND \"" + message + "\"");
+                    message = "BAD COMMAND \"" + message + "\"";
+                    System.out.println(message);
+                    sendMessage(false);
                 }
             }
 
             else {
-                for (User user:users) {
-                    if (user.getIP().equals(receivingPacket.getAddress())) {
-                        username = user.getUsername();
-                    }
-                }
                 message = username + ": " + message;
                 System.out.println("Received message from " + message);
-                sendData = message.getBytes();
-                for (User user:users) {
-                    if (!user.getUsername().equals(username)) {
-                        sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
-                        sendingSocket.send(sendingPacket);
-                    }
-                }
-                System.out.println("message sent");
+                sendMessage(true);
             }
+        }
+    }
+
+    private static void sendMessage(boolean toAll) throws Exception {
+        DatagramSocket sendingSocket = new DatagramSocket();
+        DatagramPacket sendingPacket;
+        byte[] sendData;
+
+        if (toAll) {
+            for (User user : users) {
+                if (user.getIP().equals(receivingPacket.getAddress())) {
+                    username = user.getUsername();
+                }
+            }
+            sendData = message.getBytes();
+            for (User user : users) {
+                if (!user.getUsername().equals(username)) {
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
+                    sendingSocket.send(sendingPacket);
+                }
+            }
+        }
+
+        else {
+            sendData = message.getBytes();
+            sendingPacket =
+                    new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
+            sendingSocket.send(sendingPacket);
         }
     }
 }

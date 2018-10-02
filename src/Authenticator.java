@@ -15,6 +15,7 @@ public class Authenticator {
         this.serverPort = serverPort;
     }
 
+    //TODO: Handle J_ER USER_EXISTS
     public boolean authenticate(String username) throws Exception {
         DatagramPacket sendingPacket;
         DatagramPacket receivingPacket;
@@ -34,7 +35,7 @@ public class Authenticator {
             System.out.println(serverMessage);
             return false;
         }
-        System.out.println("You joined the server as \"" + username + "\".");
+        System.out.println("You joined the server as \"" + username + "\"");
         System.out.println("Online users: " + serverMessage.substring(4));
         return true;
     }
