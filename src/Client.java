@@ -22,7 +22,13 @@ public class Client {
         while (!isAccepted) {
             System.out.print("Please type your name: ");
             username = input.readLine();
-            isAccepted = authenticate();
+
+            //+[0-9]+[-]+[_]
+            if (username.matches("[a-zA-Z0-9_-]+") && username.length() < 13) {
+                isAccepted = authenticate();
+            } else {
+                System.out.println("Username can only contain letters, numbers, - and _");
+            }
         }
 
         Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
@@ -38,7 +44,7 @@ public class Client {
         DatagramPacket receivingPacket;
         byte[] sendData;
         byte[] receiveData = new byte[1024];
-        String message = "JOIN " + username + ",";
+        String message = "JOIN " + username + ", " + serverIP + ':' + serverPort;
 
         sendData = message.getBytes();
         sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
@@ -53,7 +59,6 @@ public class Client {
         }
 
         System.out.println("You joined the server as \"" + username + "\"");
-        System.out.println("Online users: " + message.substring(4));
         return true;
     }
 }

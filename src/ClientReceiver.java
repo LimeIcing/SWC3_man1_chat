@@ -24,6 +24,10 @@ public class ClientReceiver implements Runnable {
                 if (message.startsWith("DATA ")) {
                     System.out.println(message.substring(5));
                 }
+
+                else if (message.startsWith("LIST ")) {
+                    System.out.println("Online users: " + message.substring(5));
+                }
             } catch (IOException iOE) {
                 iOE.printStackTrace();
             }

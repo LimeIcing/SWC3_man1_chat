@@ -20,7 +20,6 @@ public class Server {
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
             //TODO: Handle IMAV action server-side
-            //TODO: Limit what goes into a username
             if (message.startsWith("JOIN ")) {
                 int stop = message.indexOf(",");
                 boolean userExists = false;
@@ -42,7 +41,15 @@ public class Server {
                     System.out.println("New user joined: \"" + username + "\"");
                     message = "J_OK";
                     sendMessage(false);
-                    message = username + " has joined the server!";
+                    message = "LIST";
+
+                    for (User user:users) {
+                        message = message + ' ' + user;
+                    }
+
+                    System.out.println("Updated userlist: [" + message.substring(5) + ']');
+
+                    sendMessage(false);
                     sendMessage(true);
                 }
             }
