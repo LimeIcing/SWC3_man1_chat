@@ -72,10 +72,21 @@ public class Server {
                         break;
                     }
                 }
+
+                message = "LIST";
+
+                for (User user:users) {
+                    message = message + ' ' + user;
+                }
+
+                System.out.println("Updated userlist: [" + message.substring(5) + ']');
+
+                sendMessage(false);
+                sendMessage(true);
             }
 
             else {
-                message = "BAD COMMAND \"" + message + "\"";
+                message = " J_ER 501: UNKNOWN COMMAND \"" + message + "\"";
                 System.out.println(message);
                 sendMessage(false);
             }

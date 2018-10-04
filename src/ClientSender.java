@@ -37,12 +37,15 @@ public class ClientSender implements Runnable {
                 }
 
                 else {
-                    message = "DATA " + username + ": " + message;
+                    if (message.length() > 250) {
+                        System.out.println("Message too long");
+                    } else {
+                        message = "DATA " + username + ": " + message;
+                        sendData = message.getBytes();
+                        sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
+                        sendingSocket.send(sendingPacket);
+                    }
                 }
-
-                sendData = message.getBytes();
-                sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
-                sendingSocket.send(sendingPacket);
             } catch (IOException iOE) {
                 System.out.println("Failed to send the message.");
             }
