@@ -41,16 +41,7 @@ public class Server {
                     System.out.println("New user joined: \"" + username + "\"");
                     message = "J_OK";
                     sendMessage(false);
-                    message = "LIST";
-
-                    for (User user:users) {
-                        message = message + ' ' + user;
-                    }
-
-                    System.out.println("Updated userlist: [" + message.substring(5) + ']');
-
-                    sendMessage(false);
-                    sendMessage(true);
+                    listUsers();
                 }
             }
 
@@ -73,16 +64,11 @@ public class Server {
                     }
                 }
 
-                message = "LIST";
-
-                for (User user:users) {
-                    message = message + ' ' + user;
+                if (users.isEmpty()) {
+                    System.out.println("No users online");
+                } else {
+                    listUsers();
                 }
-
-                System.out.println("Updated userlist: [" + message.substring(5) + ']');
-
-                sendMessage(false);
-                sendMessage(true);
             }
 
             else {
@@ -119,5 +105,18 @@ public class Server {
                     new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
             sendingSocket.send(sendingPacket);
         }
+    }
+
+    private static void listUsers() throws Exception{
+        message = "LIST";
+
+        for (User user:users) {
+            message = message.concat(" " + user);
+        }
+
+        System.out.println("Updated user list: [" + message.substring(5) + ']');
+
+        sendMessage(false);
+        sendMessage(true);
     }
 }
