@@ -25,7 +25,6 @@ public class Server {
                 int stop = message.indexOf(",");
                 boolean userExists = false;
                 username = message.substring(5, stop);
-                System.out.println(username);
 
                 for (User user:users) {
                     if (username.equals(user.getUsername())) {
@@ -34,7 +33,7 @@ public class Server {
                 }
 
                 if (userExists) {
-                    message = "J_ER USER_EXISTS: Username is already in use";
+                    message = "J_ER 401: Username is already in use";
                     sendMessage(false);
                 }
 

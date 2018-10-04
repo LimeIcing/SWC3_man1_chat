@@ -8,17 +8,18 @@ public class Client {
     private static DatagramSocket receivingSocket;
     private static DatagramSocket sendingSocket;
     private static InetAddress serverIP;
-    private static int serverPort;
+    private static int serverPort = 6950;
     private static String username;
 
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        DatagramSocket receivingSocket = new DatagramSocket(6951);
-        DatagramSocket sendingSocket = new DatagramSocket();
+        boolean isAccepted = false;
+        receivingSocket = new DatagramSocket(6951);
+        sendingSocket = new DatagramSocket();
+        serverIP = InetAddress.getByName("localhost");
         Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
         Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort));
         Thread heartbeat = new Thread(new Heartbeat(sendingSocket, serverIP, serverPort));
-        boolean isAccepted = false;
 
         System.out.println("Welcome to superchat!");
         while (!isAccepted) {
