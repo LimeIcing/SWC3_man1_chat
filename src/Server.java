@@ -20,58 +20,59 @@ public class Server {
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
             //TODO: Handle IMAV action server-side
-            if (message.startsWith("/")) {
-                if (message.startsWith("/JOIN ")) {
-                    boolean userExists = false;
-                    username = message.substring(6);
+            //TODO: Limit what goes into a username
+            if (message.startsWith("JOIN ")) {
+                int stop = message.indexOf(",");
+                boolean userExists = false;
+                username = message.substring(5, stop);
+                System.out.println(username);
 
-                    for (User user:users) {
-                        if (username.equals(user.getUsername())) {
-                            userExists = true;
-                        }
-                    }
-
-                    if (userExists) {
-                        message = "J_ER USER_EXISTS";
-                        sendMessage(false);
-                    }
-
-                    else {
-                        users.add(new User(username, receivingPacket.getAddress(), clientPort));
-                        System.out.println("New user joined: \"" + username + "\"");
-                        message = "J_OK" + users.toString();
-                        sendMessage(false);
-                        message = username + " has joined the server!";
-                        sendMessage(true);
+                for (User user:users) {
+                    if (username.equals(user.getUsername())) {
+                        userExists = true;
                     }
                 }
 
-                else if (message.equals("/IMAV")) {
-                }
-
-                else if (message.equals("/QUIT")) {
-                    for (User user:users) {
-                        if (user.getIP().equals(receivingPacket.getAddress())) {
-                            message = "User \"" + user + "\" has left the server!";
-                            System.out.println(message);
-                            sendMessage(true);
-                            users.remove(user);
-                            break;
-                        }
-                    }
+                if (userExists) {
+                    message = "J_ER USER_EXISTS: Username is already in use";
+                    sendMessage(false);
                 }
 
                 else {
-                    message = "BAD COMMAND \"" + message + "\"";
-                    System.out.println(message);
+                    users.add(new User(username, receivingPacket.getAddress(), clientPort));
+                    System.out.println("New user joined: \"" + username + "\"");
+                    message = "J_OK" + users.toString();
                     sendMessage(false);
+                    message = username + " has joined the server!";
+                    sendMessage(true);
                 }
             }
 
-            else {
-                message = username + ": " + message;
+            else if (message.equals("IMAV")) {
+            }
+
+            else if (message.equals("QUIT")) {
+                for (User user:users) {
+                    if (user.getIP().equals(receivingPacket.getAddress())) {
+                        message = "User \"" + user + "\" has left the server!";
+                        System.out.println(message);
+                        sendMessage(true);
+                        users.remove(user);
+                        break;
+                    }
+                }
+            }
+
+            else if (message.startsWith("DATA ")) {
+                message = username + ": " + message.substring(5);
                 System.out.println("Received message from " + message);
                 sendMessage(true);
+            }
+
+            else {
+                message = "BAD COMMAND \"" + message + "\"";
+                System.out.println(message);
+                sendMessage(false);
             }
         }
     }

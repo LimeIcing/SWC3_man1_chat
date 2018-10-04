@@ -19,7 +19,7 @@ public class Heartbeat implements Runnable {
     public void run() {
         DatagramPacket sendingPacket;
         byte[] sendData;
-        final String message = "/IMAV";
+        final String message = "IMAV";
 
         while (true) {
             try {
