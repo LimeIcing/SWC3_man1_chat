@@ -15,14 +15,15 @@ public class ClientReceiver implements Runnable {
         String message;
         boolean shouldRun = true;
 
-
-
         while (shouldRun) {
             try {
                 receivingPacket = new DatagramPacket(receiveData, receiveData.length);
                 receivingSocket.receive(receivingPacket);
                 message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
-                System.out.println(message);
+
+                if (message.startsWith("DATA ")) {
+                    System.out.println(message.substring(5));
+                }
             } catch (IOException iOE) {
                 iOE.printStackTrace();
             }

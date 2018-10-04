@@ -17,9 +17,6 @@ public class Client {
         receivingSocket = new DatagramSocket(6951);
         sendingSocket = new DatagramSocket();
         serverIP = InetAddress.getByName("localhost");
-        Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
-        Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort));
-        Thread heartbeat = new Thread(new Heartbeat(sendingSocket, serverIP, serverPort));
 
         System.out.println("Welcome to superchat!");
         while (!isAccepted) {
@@ -28,12 +25,15 @@ public class Client {
             isAccepted = authenticate();
         }
 
+        Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
+        Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort, username));
+        Thread heartbeat = new Thread(new Heartbeat(sendingSocket, serverIP, serverPort));
         heartbeat.start();
         receiverThread.start();
         senderThread.start();
     }
 
-    public static boolean authenticate() throws Exception {
+    private static boolean authenticate() throws Exception {
         DatagramPacket sendingPacket;
         DatagramPacket receivingPacket;
         byte[] sendData;

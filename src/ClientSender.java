@@ -9,11 +9,13 @@ public class ClientSender implements Runnable {
     private DatagramSocket sendingSocket;
     private InetAddress serverIP;
     private int serverPort;
+    private String username;
 
-    public ClientSender(DatagramSocket sendingSocket, InetAddress serverIP, int serverPort) {
+    public ClientSender(DatagramSocket sendingSocket, InetAddress serverIP, int serverPort, String username) {
         this.sendingSocket = sendingSocket;
         this.serverIP = serverIP;
         this.serverPort = serverPort;
+        this.username = username;
     }
 
     public void run() {
@@ -28,9 +30,14 @@ public class ClientSender implements Runnable {
         while (shouldRun) {
             try {
                 message = input.readLine();
+
                 if (message.equalsIgnoreCase("quit")) {
                     shouldRun = false;
                     message = message.toUpperCase();
+                }
+
+                else {
+                    message = "DATA " + username + ": " + message;
                 }
 
                 sendData = message.getBytes();

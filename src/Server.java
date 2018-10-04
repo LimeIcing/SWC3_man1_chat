@@ -40,11 +40,16 @@ public class Server {
                 else {
                     users.add(new User(username, receivingPacket.getAddress(), clientPort));
                     System.out.println("New user joined: \"" + username + "\"");
-                    message = "J_OK" + users.toString();
+                    message = "J_OK";
                     sendMessage(false);
                     message = username + " has joined the server!";
                     sendMessage(true);
                 }
+            }
+
+            else if (message.startsWith("DATA ")) {
+                System.out.println("Received message from " + message.substring(5));
+                sendMessage(true);
             }
 
             else if (message.equals("IMAV")) {
@@ -60,12 +65,6 @@ public class Server {
                         break;
                     }
                 }
-            }
-
-            else if (message.startsWith("DATA ")) {
-                message = username + ": " + message.substring(5);
-                System.out.println("Received message from " + message);
-                sendMessage(true);
             }
 
             else {
