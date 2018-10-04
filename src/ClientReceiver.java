@@ -24,7 +24,7 @@ public class ClientReceiver implements Runnable {
                 message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
                 System.out.println(message);
             } catch (IOException iOE) {
-
+                iOE.printStackTrace();
             }
         }
     }
