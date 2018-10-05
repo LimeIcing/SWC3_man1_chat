@@ -51,6 +51,7 @@ public class Server {
             }
 
             else if (message.equals("IMAV")) {
+                
             }
 
             else if (message.equals("QUIT")) {

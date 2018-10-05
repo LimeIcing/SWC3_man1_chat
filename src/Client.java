@@ -19,7 +19,7 @@ public class Client {
         sendingSocket = new DatagramSocket();
         serverIP = InetAddress.getByName("localhost");
 
-        System.out.println("Welcome to superchat!");
+        System.out.println("Welcome to the chat!");
         while (!isAccepted) {
             System.out.print("Please type your name: ");
             username = input.readLine();

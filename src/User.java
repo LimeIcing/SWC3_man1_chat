@@ -20,23 +20,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public InetAddress getIP() {
         return IP;
-    }
-
-    public void setIP(InetAddress IP) {
-        this.IP = IP;
-    }
-
-    public int getReceivingPort() {
-        return receivingPort;
-    }
-
-    public void setReceivingPort(int receivingPort) {
-        this.receivingPort = receivingPort;
     }
 }
