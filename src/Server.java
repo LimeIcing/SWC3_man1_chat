@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static int clientPort = 6951;
     public static List<User> users = new ArrayList<>();
     private static DatagramPacket receivingPacket;
     private static String message, username = "";
@@ -86,6 +85,7 @@ public class Server {
     private static void sendMessage(boolean toAll) throws Exception {
         DatagramSocket sendingSocket = new DatagramSocket();
         DatagramPacket sendingPacket;
+        int clientPort = 6951;
         byte[] sendData;
 
         if (toAll) {
