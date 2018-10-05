@@ -18,12 +18,12 @@ public class TimeoutRemover implements Runnable{
                 if (user.isTimedOut()) {
                     System.out.println(user + " has timed out!");
                     Server.users.remove(user);
+                    System.out.println("Updated user list: " + Server.users);
                     break;
                 } else if (calendar.getTimeInMillis() - user.getCalendar() > 60000) {
                     user.setTimedOut(true);
                 }
             }
-            System.out.println("Updated user list: " + Server.users);
         }
     }
 }

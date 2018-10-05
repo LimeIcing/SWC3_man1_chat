@@ -15,7 +15,7 @@ public class Client {
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         boolean isAccepted = false;
-        receivingSocket = new DatagramSocket();
+        receivingSocket = new DatagramSocket(6951);
         sendingSocket = new DatagramSocket();
         serverIP = InetAddress.getByName("localhost");
 

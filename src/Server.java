@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
+    private static int clientPort = 6951;
     public static List<User> users = new ArrayList<>();
     private static DatagramPacket receivingPacket;
     private static String message, username = "";
@@ -38,7 +39,7 @@ public class Server {
                 }
 
                 else {
-                    users.add(new User(username, receivingPacket.getAddress(), receivingPacket.getPort()));
+                    users.add(new User(username, receivingPacket.getAddress()));
                     System.out.println("New user joined: \"" + username + "\"");
                     message = "J_OK";
                     sendMessage(false);
@@ -96,7 +97,7 @@ public class Server {
             sendData = message.getBytes();
             for (User user : users) {
                 if (!user.getUsername().equals(username)) {
-                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getReceivingPort());
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
                     sendingSocket.send(sendingPacket);
                 }
             }
@@ -105,7 +106,7 @@ public class Server {
         else {
             sendData = message.getBytes();
             sendingPacket =
-                    new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), receivingPacket.getPort());
+                    new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
             sendingSocket.send(sendingPacket);
         }
     }
@@ -114,7 +115,7 @@ public class Server {
         message = "LIST";
 
         for (User user:users) {
-            message = message.concat(", " + user);
+            message = message.concat(" " + user);
         }
 
         System.out.println("Updated user list: [" + message.substring(5) + ']');

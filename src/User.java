@@ -4,14 +4,12 @@ import java.util.Calendar;
 public class User {
     private String username;
     private InetAddress IP;
-    private int receivingPort;
     private boolean isTimedOut = false;
     private Calendar calendar;
 
-    public User(String username, InetAddress IP, int receivingPort) {
+    public User(String username, InetAddress IP) {
         this.username = username;
         this.IP = IP;
-        this.receivingPort = receivingPort;
         this.calendar = Calendar.getInstance();
     }
 
@@ -42,9 +40,5 @@ public class User {
 
     public void setCalendar() {
         this.calendar = Calendar.getInstance();
-    }
-
-    public int getReceivingPort() {
-        return receivingPort;
     }
 }
