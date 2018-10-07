@@ -19,7 +19,7 @@ public class Client {
         sendingSocket = new DatagramSocket();
         serverIP = InetAddress.getByName("localhost");
 
-        System.out.println("Welcome to the chat!");
+        System.out.println(Client.colourise("Welcome to the chat!", "green"));
         while (!isAccepted) {
             System.out.print("Please type your name: ");
             username = input.readLine();
@@ -28,7 +28,8 @@ public class Client {
             if (username.matches("[a-zA-Z0-9_-]+") && username.length() < 13) {
                 isAccepted = authenticate();
             } else {
-                System.out.println("Username can only contain letters, numbers, - and _");
+                System.out.println(Client.colourise("Username can only contain letters, numbers, - and _",
+                        "yellow"));
             }
         }
 
@@ -55,11 +56,34 @@ public class Client {
         message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
         if (message.startsWith("J_ER ")) {
-            System.out.println("Error code " + message.substring(5));
+            System.out.println(Client.colourise("Error code " + message.substring(5), "red"));
             return false;
         }
 
-        System.out.println("You joined the server as \"" + username + "\"");
+        System.out.println(Client.colourise("You joined the server as ", "green") + '"' +
+                Client.colourise(username, "blue") + '"');
         return true;
+    }
+
+    public static String colourise(String message, String colour) {
+        switch (colour) {
+            case "green":
+                message = "\u001B[32m" + message;
+                break;
+
+            case "red":
+                message = "\u001B[31m" + message;
+                break;
+
+            case "blue":
+                message = "\u001B[34m" + message;
+                break;
+
+            case "yellow":
+                message = "\u001B[33m" + message;
+                break;
+        }
+
+        return message + "\u001B[0m";
     }
 }

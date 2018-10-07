@@ -54,25 +54,28 @@ public class ClientReceiver implements Runnable {
                  * @LIST is for printing out the online users. It tells the user of someone join or leaves the server
                  */
                 if (message.startsWith("J_ER ")) {
-                    System.out.println("Error code " + message.substring(5));
+                    System.out.println(Client.colourise("Error code " + message.substring(5), "red"));
                 }
 
                 else if (message.startsWith("DATA ")) {
-                    System.out.println(message.substring(5));
+                    int usernameStop = message.indexOf(":");
+                    System.out.println(Client.colourise(message.substring(5, usernameStop), "blue") +
+                            message.substring(usernameStop));
                 }
 
                 else if (message.startsWith("LIST ")) {
                     if (userlistLength > 0) {
                         if (userlistLength < message.length()) {
-                            System.out.println("\u001B[32mA user joined the server!\u001B[0m");
+                            System.out.println(Client.colourise("A user joined the server!", "green"));
                         } else {
-                            System.out.println("\u001B[32mA user left the server!\u001B[0m");
+                            System.out.println(Client.colourise("A user left the server!", "yellow"));
                         }
                     }
                     //makes a list of online users, to show the client. for better reading regex removes space and replace with ","
                     userlistLength = message.length();
                     message = message.substring(5).replaceAll(" ", ", ");
-                    System.out.println("Online users: " + message);
+                    System.out.println(Client.colourise("Online users: ", "green") +
+                            Client.colourise(message, "blue"));
                 }
                 //catches an Java.IO exception
             } catch (IOException iOE) {
