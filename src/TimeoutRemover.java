@@ -29,8 +29,11 @@ public class TimeoutRemover implements Runnable{
                     break;                                                              //Stops the for each loop
                 } else if (calendar.getTimeInMillis() - user.getCalendar() > 60000) {
                     user.setTimedOut(true);
-                    // if the time beween the users chech in time and the servers time is greater than 60 seconds
-                    // the user is then set to as have timed out and will gets removed when the thread wakes up.
+                    /**
+                     * if the time between the users check-in time and the servers time is greater than 60 seconds
+                     * the user is then set to as have timed out and will gets removed when the thread wakes up.
+                     * @see Heartbeat
+                     */
                 }
             }
         }
