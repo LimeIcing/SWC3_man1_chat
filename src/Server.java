@@ -3,6 +3,11 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @see Server The server class, to run the server of the chat application
+ *
+ */
+
 public class Server {
     public static List<User> users = new ArrayList<>();
     private static DatagramPacket receivingPacket;
