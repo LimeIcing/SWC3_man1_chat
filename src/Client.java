@@ -4,6 +4,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * This is the Client Class
+ * The client is used to connect to the server to chat
+ * @author Emil, Casper
+ * @version 1.0
+ */
 public class Client {
     private static DatagramSocket receivingSocket;
     private static DatagramSocket sendingSocket;
