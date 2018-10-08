@@ -47,13 +47,13 @@ public class ClientSender implements Runnable {
          * @messege quit sends a quit message to the server so it knows that the user has left. it then stops the loop
          * and exit/terminates the client program.
          */
-        System.out.println("The server is ready to receive your message!");
+        System.out.println(Client.colourise("The server is ready to receive your message!", "green"));
         while (shouldRun) { //makes sure the code always is running
             try {
                 message = input.readLine(); //reads the input from the console
 
                 if (message.length() > 250) { //check the length of the input, if over 250, displays a error message
-                    System.out.println("Message too long");
+                    System.out.println(Client.colourise("Message too long", "yellow"));
                 } else {
                     if (message.equalsIgnoreCase("quit")) {
                         shouldRun = false;
@@ -75,7 +75,7 @@ public class ClientSender implements Runnable {
                  * @throws iOE Java.io if something goes wrong
                  */
             }  catch (IOException iOE) {
-                System.out.println("Failed to send the message.");
+                System.out.println(Client.colourise("Failed to send the message", "red"));
             }
         }
         System.exit(0); //exit the program with code 0

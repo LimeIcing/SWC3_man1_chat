@@ -25,20 +25,19 @@ public class Server {
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
-            //TODO: Handle IMAV action server-side
             if (message.startsWith("JOIN ")) {
                 int stop = message.indexOf(",");
                 boolean userExists = false;
                 username = message.substring(5, stop);
 
                 for (User user:users) {
-                    if (username.equals(user.getUsername())) {
+                    if (username.equals(user.getUsername()) || receivingPacket.getAddress().equals(user.getIP())) {
                         userExists = true;
                     }
                 }
 
                 if (userExists) {
-                    message = "J_ER 401: Username is already in use";
+                    message = "J_ER 401: Username or IP address is already in use";
                     sendMessage(false);
                 }
 
