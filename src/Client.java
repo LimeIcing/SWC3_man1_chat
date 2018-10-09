@@ -11,7 +11,6 @@ public class Client {
     private static int serverPort = 6950;
     private static String username;
 
-    //TODO: When done, write a method to colour sout's (https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println#5762502)
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         boolean isAccepted = false;
