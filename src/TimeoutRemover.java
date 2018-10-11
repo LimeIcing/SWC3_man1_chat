@@ -27,7 +27,7 @@ public class TimeoutRemover implements Runnable{
                     Server.users.remove(user);                                          //removes that user from the list
                     System.out.println("Updated user list: " + Server.users);           //prints out the updated userlist
                     break;                                                              //Stops the for each loop
-                } else if (calendar.getTimeInMillis() - user.getCalendar() > 60000) {
+                } else if (calendar.getTimeInMillis() - user.getCalendar() > 90000) {
                     user.setTimedOut(true);
                     /**
                      * if the time between the users check-in time and the servers time is greater than 60 seconds

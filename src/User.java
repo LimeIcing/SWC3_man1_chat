@@ -12,6 +12,7 @@ import java.util.Calendar;
 public class User {
     private String username;
     private InetAddress IP;
+    private int clientPort;
     private boolean isTimedOut = false;
     private Calendar calendar;
 
@@ -20,9 +21,10 @@ public class User {
      * @param username
      * @param IP
      */
-    public User(String username, InetAddress IP) {
+    public User(String username, InetAddress IP, int clientPort) {
         this.username = username;
         this.IP = IP;
+        this.clientPort = clientPort;
         this.calendar = Calendar.getInstance();
     }
 
@@ -37,6 +39,10 @@ public class User {
 
     public InetAddress getIP() {
         return IP;
+    }
+
+    public int getClientPort() {
+        return clientPort;
     }
 
     public boolean isTimedOut() {

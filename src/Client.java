@@ -7,7 +7,7 @@ import java.net.InetAddress;
 /**
  * This is the Client Class
  * The client is used to connect to the server to chat
- * receivingSocket is what socket the client is listening on
+ * socket is what socket the client is listening on
  * sendingSocket is what socket the client sends from
  * serverIP the server IP
  * serverPort is the servers port
@@ -16,8 +16,7 @@ import java.net.InetAddress;
  * @version 1.0
  */
 public class Client {
-    private static DatagramSocket receivingSocket;
-    private static DatagramSocket sendingSocket;
+    private static DatagramSocket socket;
     private static InetAddress serverIP;
     private static int serverPort = 6950;
     private static String username;
@@ -25,8 +24,7 @@ public class Client {
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));            //creates and input stream
         boolean isAccepted = false;                                                             //autenticator boolean
-        receivingSocket = new DatagramSocket(6951);                                        //Sets the clients rs socket
-        sendingSocket = new DatagramSocket();                                                   //creates a new ss
+        socket = new DatagramSocket();                                        //Sets the clients rs socket
         serverIP = InetAddress.getByName("localhost");                                          //the severs IP address
 
         System.out.println(Client.colourise("Welcome to the chat!", "green"));    //Wellcome message in gren
@@ -43,9 +41,9 @@ public class Client {
             }
         }
 
-        Thread receiverThread = new Thread(new ClientReceiver(receivingSocket));
-        Thread senderThread = new Thread(new ClientSender(sendingSocket, serverIP, serverPort, username));
-        Thread heartbeat = new Thread(new Heartbeat(sendingSocket, serverIP, serverPort));
+        Thread receiverThread = new Thread(new ClientReceiver(socket));
+        Thread senderThread = new Thread(new ClientSender(socket, serverIP, serverPort, username));
+        Thread heartbeat = new Thread(new Heartbeat(socket, serverIP, serverPort));
         heartbeat.start();          //Starts the heartbeat thread
         receiverThread.start();     //starts the reciverThred
         senderThread.start();       //starts the senderThread
@@ -60,9 +58,9 @@ public class Client {
 
         sendData = message.getBytes();
         sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
-        sendingSocket.send(sendingPacket);
+        socket.send(sendingPacket);
         receivingPacket = new DatagramPacket(receiveData, receiveData.length);
-        receivingSocket.receive(receivingPacket);
+        socket.receive(receivingPacket);
         message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
 
         if (message.startsWith("J_ER ")) {                                                     //if you get an error message from the server, you need to try again with a new name

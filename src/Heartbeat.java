@@ -50,7 +50,7 @@ public class Heartbeat implements Runnable {
                 System.out.println("Failed to send the message.");
             }
             try {
-                Thread.sleep(6000);                                                             //sleeps the Thread for 6sec
+                Thread.sleep(60000);                                                             //sleeps the Thread for 60sec
             } catch (InterruptedException iE) {                                                      //InterruptedException
                 iE.printStackTrace();
             }

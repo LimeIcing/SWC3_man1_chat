@@ -24,11 +24,17 @@ public class Server {
             receivingPacket = new DatagramPacket(receiveData, receiveData.length);
             receivingSocket.receive(receivingPacket);
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
+            System.out.println("RAW MESSAGE: " + message);
 
             if (message.startsWith("JOIN ")) {
                 int stop = message.indexOf(",");
                 boolean userExists = false;
-                username = message.substring(5, stop);
+
+                if (stop == -1) {
+                    username = message.substring(5);
+                } else {
+                    username = message.substring(5, stop);
+                }
 
                 for (User user:users) {
                     if (username.equals(user.getUsername()) || receivingPacket.getAddress().equals(user.getIP())) {
@@ -42,7 +48,7 @@ public class Server {
                 }
 
                 else {
-                    users.add(new User(username, receivingPacket.getAddress()));
+                    users.add(new User(username, receivingPacket.getAddress(), receivingPacket.getPort()));
                     System.out.println("New user joined: \"" + username + "\"");
                     message = "J_OK";
                     sendMessage(false);
@@ -89,7 +95,6 @@ public class Server {
     private static void sendMessage(boolean toAll) throws Exception {
         DatagramSocket sendingSocket = new DatagramSocket();
         DatagramPacket sendingPacket;
-        int clientPort = 6951;
         byte[] sendData;
 
         if (toAll) {
@@ -101,7 +106,7 @@ public class Server {
             sendData = message.getBytes();
             for (User user : users) {
                 if (!user.getUsername().equals(username)) {
-                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), clientPort);
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getClientPort());
                     sendingSocket.send(sendingPacket);
                 }
             }
@@ -109,8 +114,8 @@ public class Server {
 
         else {
             sendData = message.getBytes();
-            sendingPacket =
-                    new DatagramPacket(sendData, sendData.length, receivingPacket.getAddress(), clientPort);
+            sendingPacket = new DatagramPacket(
+                            sendData, sendData.length, receivingPacket.getAddress(), receivingPacket.getPort());
             sendingSocket.send(sendingPacket);
         }
     }
