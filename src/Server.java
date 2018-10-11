@@ -108,6 +108,8 @@ public class Server {
                 if (!user.getUsername().equals(username)) {
                     sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getClientPort());
                     sendingSocket.send(sendingPacket);
+                    System.out.println("Sent the message to " + user.getUsername() + ", " +
+                            user.getIP() + ':' + user.getClientPort());
                 }
             }
         }
