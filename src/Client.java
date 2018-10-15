@@ -12,6 +12,8 @@ import java.net.InetAddress;
  * serverIP the server IP
  * serverPort is the servers port
  * username is the username of the client
+ * The client uses the @authenticate method to connect to the server asking if the username is taken
+ * if not taken the client is accepted to the server
  * @author Emil, Casper
  * @version 1.0
  */
@@ -23,11 +25,11 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));            //creates and input stream
-        boolean isAccepted = false;                                                             //autenticator boolean
-        socket = new DatagramSocket();                                        //Sets the clients rs socket
+        boolean isAccepted = false;                                                             //authenticator boolean
+        socket = new DatagramSocket();                                                          //Sets the clients rs socket
         serverIP = InetAddress.getByName("localhost");                                          //the severs IP address
 
-        System.out.println(Client.colourise("Welcome to the chat!", "green"));    //Wellcome message in gren
+        System.out.println(Client.colourise("Welcome to the chat!", "green"));    //Welcome message in green
         while (!isAccepted) {                                                                   //runs if user is OK
             System.out.print("Please type your name: ");
             username = input.readLine();                                                        //takes the input as a username
@@ -44,9 +46,9 @@ public class Client {
         Thread receiverThread = new Thread(new ClientReceiver(socket));
         Thread senderThread = new Thread(new ClientSender(socket, serverIP, serverPort, username));
         Thread heartbeat = new Thread(new Heartbeat(socket, serverIP, serverPort));
-        heartbeat.start();          //Starts the heartbeat thread
-        receiverThread.start();     //starts the reciverThred
-        senderThread.start();       //starts the senderThread
+        heartbeat.start();                                                                      //Starts the heartbeat thread
+        receiverThread.start();                                                                 //starts the reciverThred
+        senderThread.start();                                                                   //starts the senderThread
     }
 
     private static boolean authenticate() throws Exception {                                    //the authenticater method for checking usernames on server

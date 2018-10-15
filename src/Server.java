@@ -5,6 +5,9 @@ import java.util.List;
 
 /**
  * @see Server The server class, to run the server of the chat application
+ * List stores a list of all connectet and active users
+ * receivingPacket is a packet to receive messeges
+ * message is what the server uses to send messeges
  *
  */
 
@@ -26,7 +29,7 @@ public class Server {
             message = new String(receivingPacket.getData(), 0, receivingPacket.getLength());
             System.out.println("RAW MESSAGE: " + message);
 
-            if (message.startsWith("JOIN ")) {
+            if (message.startsWith("JOIN ")) {                                                                          //if the message starts with JOIN this part runs
                 int stop = message.indexOf(",");
                 boolean userExists = false;
 
@@ -37,57 +40,57 @@ public class Server {
                 }
 
                 for (User user:users) {
-                    if (username.equals(user.getUsername()) || receivingPacket.getAddress().equals(user.getIP())) {
-                        userExists = true;
+                    if (username.equals(user.getUsername()) || receivingPacket.getAddress().equals(user.getIP())) {     //if the list contains a username and an IP address that already is in use
+                        userExists = true;                                                                              //sets the userExist to true
                     }
                 }
 
-                if (userExists) {
-                    message = "J_ER 401: Username or IP address is already in use";
-                    sendMessage(false);
+                if (userExists) {                                                                                       //runs if the userExist is true
+                    message = "J_ER 401: Username or IP address is already in use";                                     //sends the J_ER message
+                    sendMessage(false);                                                                            //sends only the message to specific client
                 }
 
                 else {
-                    users.add(new User(username, receivingPacket.getAddress(), receivingPacket.getPort()));
-                    System.out.println("New user joined: \"" + username + "\"");
-                    message = "J_OK";
-                    sendMessage(false);
-                    listUsers();
+                    users.add(new User(username, receivingPacket.getAddress(), receivingPacket.getPort()));             //if the name is not taken display a messege to all users
+                    System.out.println("New user joined: \"" + username + "\"");                                        //the message displayed
+                    message = "J_OK";                                                                                   //sends a J_OK message to the user joining
+                    sendMessage(false);                                                                            //only sends to the user
+                    listUsers();                                                                                        //display a list of users on the server
                 }
             }
 
-            else if (message.startsWith("DATA ")) {
-                updateTimeout();
-                System.out.println("Received message from " + message.substring(5));
-                sendMessage(true);
+            else if (message.startsWith("DATA ")) {                                                                     //if the message starts with JOIN this part runs
+                updateTimeout();                                                                                        //updates the users heartbeat time
+                System.out.println("Received message from " + message.substring(5));                                    //displays the messages server side
+                sendMessage(true);                                                                                 //sends the message to all users
             }
 
-            else if (message.equals("IMAV")) {
-                updateTimeout();
+            else if (message.equals("IMAV")) {                                                                          //if the message starts with IMAV this part runs
+                updateTimeout();                                                                                        //updates the users heartbeat timer
             }
 
-            else if (message.equals("QUIT")) {
-                for (User user:users) {
-                    if (user.getIP().equals(receivingPacket.getAddress())) {
-                        message = "User \"" + user + "\" has left the server!";
-                        System.out.println(message);
-                        sendMessage(true);
-                        users.remove(user);
-                        break;
+            else if (message.equals("QUIT")) {                                                                          //if the message starts with QUIT this part runs
+                for (User user:users) {                                                                                 //starts a for each loop on the user list to find the user who send the quit
+                    if (user.getIP().equals(receivingPacket.getAddress())) {                                            //finds the user by using the addresses received from the packet
+                        message = "User \"" + user + "\" has left the server!";                                         //post a user has left the server
+                        System.out.println(message);                                                                    //print the quit message
+                        sendMessage(true);                                                                         //sends the message to all users on the server
+                        users.remove(user);                                                                             //removes the user from the list
+                        break;                                                                                          //breaks the if
                     }
                 }
 
-                if (users.isEmpty()) {
-                    System.out.println("No users online");
+                if (users.isEmpty()) {                                                                                  //if the list is empty prints this
+                    System.out.println("No users online");                                                              //displays a messages
                 } else {
-                    listUsers();
+                    listUsers();                                                                                        //list users on the server
                 }
             }
 
             else {
-                message = " J_ER 501: UNKNOWN COMMAND \"" + message + "\"";
-                System.out.println(message);
-                sendMessage(false);
+                message = " J_ER 501: UNKNOWN COMMAND \"" + message + "\"";                                             //if the server don't recognised the command used
+                System.out.println(message);                                                                            //prints the message
+                sendMessage(false);                                                                                //sends the message to the user
             }
         }
     }
@@ -122,7 +125,7 @@ public class Server {
         }
     }
 
-    private static void listUsers() throws Exception{
+    private static void listUsers() throws Exception{                                   
         message = "LIST";
 
         for (User user:users) {
@@ -135,11 +138,11 @@ public class Server {
         sendMessage(true);
     }
 
-    private static void updateTimeout() {
-        for (User user:users) {
+    private static void updateTimeout() {                                                                               //method for updating the time for the users
+        for (User user:users) {                                                                                         //using a foreach loop to find the user by the address
             if (user.getIP().equals(receivingPacket.getAddress())) {
-                user.setCalendar();
-                user.setTimedOut(false);
+                user.setCalendar();                                                                                     //sets the Calender for the user
+                user.setTimedOut(false);                                                                                //sets the users timeout to false
             }
         }
     }
