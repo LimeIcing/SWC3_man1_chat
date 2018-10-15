@@ -95,29 +95,29 @@ public class Server {
         }
     }
 
-    private static void sendMessage(boolean toAll) throws Exception {
+    private static void sendMessage(boolean toAll) throws Exception {                                                   //method sendMassage
         DatagramSocket sendingSocket = new DatagramSocket();
         DatagramPacket sendingPacket;
         byte[] sendData;
 
-        if (toAll) {
+        if (toAll) {                                                                                                    //if sendMassage is true, it sends the message to all connectet users in the list
             for (User user : users) {
                 if (user.getIP().equals(receivingPacket.getAddress())) {
                     username = user.getUsername();
                 }
             }
             sendData = message.getBytes();
-            for (User user : users) {
+            for (User user : users) {                                                                                   //foreach loop the send a message to all users
                 if (!user.getUsername().equals(username)) {
-                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getClientPort());
-                    sendingSocket.send(sendingPacket);
-                    System.out.println("Sent the message to " + user.getUsername() + ", " +
+                    sendingPacket = new DatagramPacket(sendData, sendData.length, user.getIP(), user.getClientPort());  //the sendingPacket with length, user IP, and clientPort
+                    sendingSocket.send(sendingPacket);                                                                  //sends the packet
+                    System.out.println("Sent the message to " + user.getUsername() + ", " +                             //print out the message server side
                             user.getIP() + ':' + user.getClientPort());
                 }
             }
         }
 
-        else {
+        else {                                                                                                          //if the message only need to be send to one client
             sendData = message.getBytes();
             sendingPacket = new DatagramPacket(
                             sendData, sendData.length, receivingPacket.getAddress(), receivingPacket.getPort());
@@ -125,8 +125,8 @@ public class Server {
         }
     }
 
-    private static void listUsers() throws Exception{                                   
-        message = "LIST";
+    private static void listUsers() throws Exception{                                                                   //method for listingUsers
+        message = "LIST";                                                                                               //if the message contains LIST
 
         for (User user:users) {
             message = message.concat(" " + user);
