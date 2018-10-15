@@ -13,7 +13,6 @@ public class ClientReceiver implements Runnable {
     private DatagramSocket receivingSocket;
 
     /**
-     *
      * @param receivingSocket What socket the client wants to receive packets on.
      */
     public ClientReceiver(DatagramSocket receivingSocket) {

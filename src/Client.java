@@ -12,6 +12,8 @@ import java.net.InetAddress;
  * serverIP the server IP
  * serverPort is the servers port
  * username is the username of the client
+ * The client uses the @authenticate method to connect to the server asking if the username is taken
+ * if not taken the client is accepted to the server
  * @author Emil, Casper
  * @version 1.0
  */
@@ -28,6 +30,7 @@ public class Client {
         serverIP = InetAddress.getByName("localhost");                                          //the severs IP address
 
         System.out.println(Client.colourise("Welcome to the chat!", "green"));  //Welcome message in green
+
         while (!isAccepted) {                                                                   //runs if user is OK
             System.out.print("Please type your name: ");
             username = input.readLine();                                                        //takes the input as a username
@@ -44,9 +47,10 @@ public class Client {
         Thread receiverThread = new Thread(new ClientReceiver(socket));
         Thread senderThread = new Thread(new ClientSender(socket, serverIP, serverPort, username));
         Thread heartbeat = new Thread(new Heartbeat(socket, serverIP, serverPort));
-        heartbeat.start();          //Starts the heartbeat thread
-        receiverThread.start();     //starts the receiverThread
-        senderThread.start();       //starts the senderThread
+
+        heartbeat.start();                                                                      //Starts the heartbeat thread
+        receiverThread.start();                                                                 //starts the receiverThread
+        senderThread.start();                                                                   //starts the senderThread
     }
 
     private static boolean authenticate() throws Exception {                                    //the authenticator method for checking usernames on server
