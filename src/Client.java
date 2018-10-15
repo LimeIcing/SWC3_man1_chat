@@ -23,17 +23,17 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));            //creates and input stream
-        boolean isAccepted = false;                                                             //autenticator boolean
-        socket = new DatagramSocket();                                        //Sets the clients rs socket
+        boolean isAccepted = false;                                                             //authenticator boolean
+        socket = new DatagramSocket();                                                          //Sets the clients rs socket
         serverIP = InetAddress.getByName("localhost");                                          //the severs IP address
 
-        System.out.println(Client.colourise("Welcome to the chat!", "green"));    //Wellcome message in gren
+        System.out.println(Client.colourise("Welcome to the chat!", "green"));  //Welcome message in green
         while (!isAccepted) {                                                                   //runs if user is OK
             System.out.print("Please type your name: ");
             username = input.readLine();                                                        //takes the input as a username
 
             //+[0-9]+[-]+[_]
-            if (username.matches("[a-zA-Z0-9_-]+") && username.length() < 13) {           //looks at the username for wrong chars
+            if (username.matches("[a-zA-Z0-9_-]+") && username.length() < 13) {              //looks at the username for wrong chars
                 isAccepted = authenticate();                                                    //runs the authenticate method if username OK
             } else {                                                                            //if wrong chars in name, try again.
                 System.out.println(Client.colourise("Username can only contain letters, numbers, - and _",
@@ -45,16 +45,16 @@ public class Client {
         Thread senderThread = new Thread(new ClientSender(socket, serverIP, serverPort, username));
         Thread heartbeat = new Thread(new Heartbeat(socket, serverIP, serverPort));
         heartbeat.start();          //Starts the heartbeat thread
-        receiverThread.start();     //starts the reciverThred
+        receiverThread.start();     //starts the receiverThread
         senderThread.start();       //starts the senderThread
     }
 
-    private static boolean authenticate() throws Exception {                                    //the authenticater method for checking usernames on server
+    private static boolean authenticate() throws Exception {                                    //the authenticator method for checking usernames on server
         DatagramPacket sendingPacket;
         DatagramPacket receivingPacket;
         byte[] sendData;
         byte[] receiveData = new byte[1024];
-        String message = "JOIN " + username + ", " + serverIP + ':' + serverPort;               //creates the join messege to the server with the users username
+        String message = "JOIN " + username + ", " + serverIP + ':' + serverPort;               //creates the join message to the server with the users username
 
         sendData = message.getBytes();
         sendingPacket = new DatagramPacket(sendData, sendData.length, serverIP, serverPort);
@@ -73,7 +73,7 @@ public class Client {
         return true;
     }
 
-    public static String colourise(String message, String colour) {                         //our colour method for showing colours in console
+    public static String colourise(String message, String colour) {                            //our colour method for showing colours in console
         switch (colour) {
             case "green":
                 message = "\u001B[32m" + message;
