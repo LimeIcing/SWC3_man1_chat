@@ -11,6 +11,17 @@ import java.util.List;
  *
  */
 
+//TODO: handle errors; don't throw them further
+//TODO: use packages
+//TODO: consider checking usernames on a hash set.
+//TODO:
+//TODO: correct heartbeat to realise that a DATA message does the same in theory
+//TODO: use switch cases where it can be applied
+//TODO: use lambda expressions
+//TODO: make a powerpoint presentation
+//TODO: error handling should be done before the switch case; the default case is a default option, NOT an error case
+//TODO: consider holding commands in a hash set/map
+
 public class Server {
     public static List<User> users = new ArrayList<>();
     private static DatagramPacket receivingPacket;
@@ -47,14 +58,14 @@ public class Server {
 
                 if (userExists) {                                                                                       //runs if the userExist is true
                     message = "J_ER 401: Username or IP address is already in use";                                     //sends the J_ER message
-                    sendMessage(false);                                                                            //sends only the message to specific client
+                    sendMessage(false);                                                                           //sends only the message to specific client
                 }
 
                 else {
                     users.add(new User(username, receivingPacket.getAddress(), receivingPacket.getPort()));             //if the name is not taken display a messege to all users
                     System.out.println("New user joined: \"" + username + "\"");                                        //the message displayed
                     message = "J_OK";                                                                                   //sends a J_OK message to the user joining
-                    sendMessage(false);                                                                            //only sends to the user
+                    sendMessage(false);                                                                           //only sends to the user
                     listUsers();                                                                                        //display a list of users on the server
                 }
             }
@@ -62,7 +73,7 @@ public class Server {
             else if (message.startsWith("DATA ")) {                                                                     //if the message starts with JOIN this part runs
                 updateTimeout();                                                                                        //updates the users heartbeat time
                 System.out.println("Received message from " + message.substring(5));                                    //displays the messages server side
-                sendMessage(true);                                                                                 //sends the message to all users
+                sendMessage(true);                                                                                //sends the message to all users
             }
 
             else if (message.equals("IMAV")) {                                                                          //if the message starts with IMAV this part runs
@@ -74,7 +85,7 @@ public class Server {
                     if (user.getIP().equals(receivingPacket.getAddress())) {                                            //finds the user by using the addresses received from the packet
                         message = "User \"" + user + "\" has left the server!";                                         //post a user has left the server
                         System.out.println(message);                                                                    //print the quit message
-                        sendMessage(true);                                                                         //sends the message to all users on the server
+                        sendMessage(true);                                                                        //sends the message to all users on the server
                         users.remove(user);                                                                             //removes the user from the list
                         break;                                                                                          //breaks the if
                     }
@@ -90,7 +101,7 @@ public class Server {
             else {
                 message = " J_ER 501: UNKNOWN COMMAND \"" + message + "\"";                                             //if the server don't recognised the command used
                 System.out.println(message);                                                                            //prints the message
-                sendMessage(false);                                                                                //sends the message to the user
+                sendMessage(false);                                                                               //sends the message to the user
             }
         }
     }
