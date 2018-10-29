@@ -14,13 +14,13 @@ import java.util.List;
 //TODO: handle errors; don't throw them further
 //TODO: use packages
 //TODO: consider checking usernames on a hash set.
-//TODO:
 //TODO: correct heartbeat to realise that a DATA message does the same in theory
 //TODO: use switch cases where it can be applied
 //TODO: use lambda expressions
 //TODO: make a powerpoint presentation
 //TODO: error handling should be done before the switch case; the default case is a default option, NOT an error case
 //TODO: consider holding commands in a hash set/map
+//TODO: use StringBuilder
 
 public class Server {
     public static List<User> users = new ArrayList<>();
